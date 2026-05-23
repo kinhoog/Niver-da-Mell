@@ -1206,6 +1206,43 @@
       line-height: 1.55;
     }
 
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .next-episode-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.62rem;
+      min-height: 2.9rem;
+      padding: 0.78rem 1.15rem;
+      border-radius: 6px;
+      color: var(--white);
+      background: linear-gradient(135deg, #e50914 0%, #a80610 100%);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      box-shadow: 0 14px 30px rgba(229, 9, 20, 0.28);
+      font-size: 0.9rem;
+      font-weight: 950;
+      letter-spacing: 0.01em;
+      transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
+    }
+
+    .next-episode-button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+      box-shadow: 0 18px 38px rgba(229, 9, 20, 0.36);
+    }
+
+    .season-end-button {
+      background: rgba(255, 255, 255, 0.11);
+      box-shadow: none;
+    }
+
     @media (max-width: 1040px) {
       .row {
         grid-template-columns: repeat(3, minmax(210px, 66vw));
@@ -1402,16 +1439,17 @@
 
       .song-grid {
         grid-template-columns: 1fr;
-        max-width: 420px;
+        max-width: 360px;
         margin: 0 auto;
+        gap: 0.8rem;
       }
 
       .song-card {
         width: 100%;
-        max-width: 420px;
+        max-width: 360px;
         min-height: auto;
         margin: 0 auto;
-        padding: 0.85rem;
+        padding: 0.72rem;
       }
 
       .song-card:hover {
@@ -1423,20 +1461,40 @@
       }
 
       .song-info {
-        padding-top: 0.82rem;
+        padding-top: 0.72rem;
+      }
+
+      .song-info h3 {
+        font-size: 0.96rem;
+      }
+
+      .song-artist {
+        margin-top: 0.34rem;
+        font-size: 0.8rem;
       }
 
       .song-card .btn {
-        min-height: 46px;
-        padding: 0.75rem 0.9rem;
+        min-height: 44px;
+        margin-top: 0.72rem;
+        padding: 0.68rem 0.82rem;
+        font-size: 0.84rem;
       }
 
       .song-details {
-        padding: 0.82rem;
+        padding: 0.72rem;
       }
 
       .melfy-experience .final-actions {
         padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+      }
+
+      .modal-actions {
+        justify-content: stretch;
+      }
+
+      .next-episode-button {
+        width: 100%;
+        min-height: 48px;
       }
     }
 
@@ -1536,7 +1594,23 @@
       }
 
       .melfy-section .song-info {
-        padding-top: 0.82rem;
+        padding-top: 0.72rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .melfy-section {
+        padding-top: 1.65rem;
+      }
+
+      .song-grid {
+        max-width: 316px;
+        gap: 0.75rem;
+      }
+
+      .song-card {
+        max-width: 316px;
+        padding: 0.68rem;
       }
     }
 
@@ -1611,8 +1685,7 @@
 
         <section class="section" aria-labelledby="couponTitle">
           <div class="gift-unlock reveal-on-scroll">
-            <span class="coupon-eyebrow">presente desbloqueável</span>
-            <h2 id="couponTitle">Madero com a Mel</h2>
+            <span class="coupon-eyebrow" id="couponTitle">presente desbloqueável</span>
             <p>um convite pequeno, dourado e guardado só para abrir quando bater vontade.</p>
             <button class="gift-button" type="button" data-coupon-reveal aria-expanded="false" aria-controls="maderoGift">
               <span class="gift-icon" aria-hidden="true"></span>
@@ -1622,7 +1695,7 @@
 
           <div class="coupon-strip coupon-gift-panel reveal-on-scroll" id="maderoGift" hidden>
             <div class="coupon-copy">
-              <h3>Madero com a Mel</h3>
+              <h3>Convite dourado</h3>
               <span class="coupon-eyebrow">CUPOM DESBLOQUEADO</span>
               <strong class="coupon-code">Código: MEL-MADERO</strong>
               <p class="coupon-text">um vale-madero pra gente sair qualquer sábado que você estiver tranquila, belê? Pra eu comemorar você com calma 🤍</p>
@@ -1685,6 +1758,7 @@
         <p class="modal-text" id="modalText"></p>
         <div class="modal-extra" id="modalExtra"></div>
         <p class="modal-note" id="modalNote"></p>
+        <div class="modal-actions" id="modalActions" hidden></div>
       </div>
     </article>
   </div>
@@ -1834,8 +1908,8 @@ Porque conexão leve assim é rara.`
     const modalText = document.querySelector("#modalText");
     const modalExtra = document.querySelector("#modalExtra");
     const modalNote = document.querySelector("#modalNote");
+    const modalActions = document.querySelector("#modalActions");
     const closeModalButton = document.querySelector("#closeModal");
-    const couponRevealButton = document.querySelector("[data-coupon-reveal]");
     const maderoGift = document.querySelector("#maderoGift");
 
     let lastFocusedElement = null;
@@ -1996,8 +2070,26 @@ Porque conexão leve assim é rara.`
         kicker: episode.label,
         title: episode.title,
         text: episode.text,
-        html: episodeImageHtml(episode)
+        html: episodeImageHtml(episode),
+        actions: episodeActionsHtml(index)
       });
+    }
+
+    function episodeActionsHtml(index) {
+      if (index < episodes.length - 1) {
+        return `
+          <button class="next-episode-button" type="button" data-open-episode="${index + 1}">
+            <span class="play-symbol" aria-hidden="true"></span>
+            Próximo episódio
+          </button>
+        `;
+      }
+
+      return `
+        <button class="next-episode-button season-end-button" type="button" data-close-modal>
+          Finalizar temporada
+        </button>
+      `;
     }
 
     function renderProfiles() {
@@ -2091,7 +2183,12 @@ Porque conexão leve assim é rara.`
     }
 
     function openModal(content) {
-      lastFocusedElement = document.activeElement;
+      const modalWasOpen = modalOverlay.classList.contains("is-open");
+
+      if (!modalWasOpen) {
+        lastFocusedElement = document.activeElement;
+      }
+
       modalKicker.textContent = content.kicker || "MelFlix original";
       modalTitle.textContent = content.title || "";
       modalText.textContent = content.text || "";
@@ -2099,6 +2196,8 @@ Porque conexão leve assim é rara.`
       modalExtra.hidden = !content.html;
       modalNote.textContent = content.note || "";
       modalNote.hidden = !content.note;
+      modalActions.innerHTML = content.actions || "";
+      modalActions.hidden = !content.actions;
       modalOverlay.classList.add("is-open");
       modalOverlay.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
@@ -2222,6 +2321,7 @@ Porque conexão leve assim é rara.`
       const heroEpisodeButton = event.target.closest("[data-open-episode]");
       const songRevealButton = event.target.closest("[data-song-reveal]");
       const couponReveal = event.target.closest("[data-coupon-reveal]");
+      const closeModalAction = event.target.closest("[data-close-modal]");
 
       if (profileButton) {
         showProfile(profileButton.dataset.profile);
@@ -2250,8 +2350,12 @@ Porque conexão leve assim é rara.`
         maderoGift.hidden = false;
         maderoGift.classList.add("is-visible");
         couponReveal.setAttribute("aria-expanded", "true");
-        couponReveal.innerHTML = '<span class="gift-icon" aria-hidden="true"></span>presente aberto';
+        couponReveal.hidden = true;
         maderoGift.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      if (closeModalAction) {
+        closeModal();
       }
 
       if (event.target === modalOverlay) {
