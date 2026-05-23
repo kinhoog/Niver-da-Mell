@@ -1087,7 +1087,7 @@
       box-shadow: 0 10px 22px rgba(255, 188, 54, 0.2);
     }
 
-    .gift-unlock .coupon-eyebrow {
+    .gift-unlock.is-opened .coupon-eyebrow {
       color: #101216;
       background: linear-gradient(135deg, #ffffff 0%, #dfe5ef 48%, #9aa4b3 100%);
       box-shadow:
@@ -2766,11 +2766,13 @@ Porque conexão leve assim é rara.`
 
     function setGiftButtonReopenState() {
       const giftButton = document.querySelector("[data-coupon-reveal]");
+      const giftUnlock = document.querySelector(".gift-unlock");
 
       if (!giftButton) {
         return;
       }
 
+      giftUnlock?.classList.add("is-opened");
       giftButton.hidden = false;
       giftButton.classList.add("is-reopen");
       giftButton.setAttribute("aria-expanded", "false");
