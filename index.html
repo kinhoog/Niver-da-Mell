@@ -1087,6 +1087,14 @@
       box-shadow: 0 10px 22px rgba(255, 188, 54, 0.2);
     }
 
+    .gift-unlock .coupon-eyebrow {
+      color: #101216;
+      background: linear-gradient(135deg, #ffffff 0%, #dfe5ef 48%, #9aa4b3 100%);
+      box-shadow:
+        0 12px 28px rgba(207, 219, 235, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
     .coupon-code {
       display: inline-flex;
       width: fit-content;
@@ -2089,7 +2097,7 @@
         <section class="section" aria-labelledby="couponTitle">
           <div class="gift-unlock reveal-on-scroll">
             <span class="coupon-eyebrow" id="couponTitle">presente desbloqueável</span>
-            <p>um convite pequeno, dourado e guardado só para abrir quando bater vontade.</p>
+            <p>um convite pequeno e guardado só para abrir quando bater vontade.</p>
             <button class="gift-button" type="button" data-coupon-reveal aria-expanded="false" aria-controls="maderoGift">
               <span class="gift-icon" aria-hidden="true"></span>
               abrir presente
@@ -2802,6 +2810,7 @@ Porque conexão leve assim é rara.`
         giftOriginalParent.insertBefore(maderoGift, giftOriginalNextSibling);
       }
 
+      maderoGift.hidden = true;
       document.body.style.overflow = "";
     }
 
