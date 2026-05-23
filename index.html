@@ -1034,16 +1034,66 @@
       font-size: 0.88rem;
     }
 
-    .song-reveal-button {
-      color: rgba(248, 248, 248, 0.88);
-      background: rgba(255, 255, 255, 0.075);
-      border-color: rgba(255, 255, 255, 0.12);
-      box-shadow: none;
+    .song-control-row {
+      display: flex;
+      align-items: center;
+      gap: 0.72rem;
+      min-height: 3rem;
+      margin-top: 0.9rem;
     }
 
-    .song-reveal-button:hover {
-      border-color: rgba(29, 185, 84, 0.38);
-      background: rgba(255, 255, 255, 0.12);
+    .song-play-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      flex: 0 0 3rem;
+      border-radius: 999px;
+      color: #06130c;
+      background: var(--green);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 14px 30px rgba(29, 185, 84, 0.3);
+      transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
+    }
+
+    .song-play-button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.08);
+      box-shadow: 0 18px 38px rgba(29, 185, 84, 0.4);
+    }
+
+    .song-play-icon {
+      width: 0;
+      height: 0;
+      margin-left: 0.14rem;
+      border-top: 0.42rem solid transparent;
+      border-bottom: 0.42rem solid transparent;
+      border-left: 0.68rem solid #06130c;
+    }
+
+    .song-play-button.is-playing .song-play-icon {
+      width: 0.86rem;
+      height: 0.96rem;
+      margin-left: 0;
+      border: 0;
+      background: linear-gradient(90deg, #06130c 0 34%, transparent 34% 66%, #06130c 66% 100%);
+    }
+
+    .song-play-status {
+      color: rgba(248, 248, 248, 0.76);
+      font-size: 0.84rem;
+      line-height: 1.35;
+      font-weight: 850;
+    }
+
+    .song-card.is-playing .song-play-status {
+      color: #d7ffe4;
+    }
+
+    .song-audio {
+      display: none;
     }
 
     .song-details {
@@ -1520,6 +1570,21 @@
         font-size: 0.84rem;
       }
 
+      .song-control-row {
+        gap: 0.62rem;
+        margin-top: 0.72rem;
+      }
+
+      .song-play-button {
+        width: 46px;
+        height: 46px;
+        flex-basis: 46px;
+      }
+
+      .song-play-status {
+        font-size: 0.8rem;
+      }
+
       .song-details {
         padding: 0.72rem;
       }
@@ -1911,21 +1976,24 @@ Porque conexão leve assim é rara.`
         artist: "BK",
         spotifyUrl: "https://open.spotify.com/track/31ySVMbs7U8LOuy7w4McR9?si=6EPqXzLUTVmZpodFAbI8cA&rowId=3f07897ed2595c85",
         cover: "https://i1.sndcdn.com/artworks-myEbm2h93kP4-0-t1080x1080.jpg",
-        excerpt: "1:10 - 1:48"
+        excerpt: "1:10 - 1:48",
+        audioUrl: "so-me-ligar.mp3"
       },
       {
         title: "Me Chamando de Paixão",
         artist: "Jorge Ben Jor",
         spotifyUrl: "https://open.spotify.com/track/5ayMrwnzBZ9QanL2M9A5Ey?si=UckQ953DRT2mOgb7M8P3ew",
         cover: "https://i1.sndcdn.com/artworks-rzuNfMa8qtNf-0-t1080x1080.jpg",
-        excerpt: "2:09 - 2:50"
+        excerpt: "2:09 - 2:50",
+        audioUrl: "me-chamando-de-paixao.mp3"
       },
       {
         title: "Alarm (Midnight Calls)",
         artist: "Yunk Vino",
         spotifyUrl: "https://open.spotify.com/intl-pt/track/6OpLzj6YwFgLIx5aQ1ChL2",
         cover: "https://cdn-images.dzcdn.net/images/cover/fb47bdd1ae14c4c650339dae94f3b386/500x500-000000-80-0-0.jpg",
-        excerpt: "0:15 - 0:48"
+        excerpt: "0:15 - 0:48",
+        audioUrl: "alarm-midnight-calls.mp3"
       }
     ];
 
@@ -2155,6 +2223,7 @@ Porque conexão leve assim é rara.`
     }
 
     function showProfile(profileId) {
+      pauseAllSongs();
       profilesScreen.hidden = true;
       melflixExperience.hidden = profileId !== "melflix";
       melfyExperience.hidden = profileId !== "melfy";
@@ -2164,6 +2233,7 @@ Porque conexão leve assim é rara.`
     }
 
     function showProfiles() {
+      pauseAllSongs();
       profilesScreen.hidden = false;
       melflixExperience.hidden = true;
       melfyExperience.hidden = true;
@@ -2200,28 +2270,116 @@ Porque conexão leve assim é rara.`
           <div class="song-info">
             <h3>${escapeHtml(song.title)}</h3>
             <p class="song-artist">${escapeHtml(song.artist)}</p>
-            <button class="btn btn-secondary song-reveal-button" type="button" data-song-reveal="${index}" aria-expanded="false" aria-controls="song-details-${index}">Clique aqui</button>
+            <div class="song-control-row">
+              <button class="song-play-button" type="button" data-song-play="${index}" aria-expanded="false" aria-controls="song-details-${index}" aria-label="Reproduzir trecho de ${escapeHtml(song.title)}">
+                <span class="song-play-icon" aria-hidden="true"></span>
+              </button>
+              <span class="song-play-status" id="song-status-${index}">Reproduzir trecho</span>
+            </div>
             <div class="song-details" id="song-details-${index}" hidden>
               <p>Trecho que me lembra você: ${escapeHtml(song.excerpt)}</p>
               <a class="btn btn-primary song-spotify-button" href="${escapeHtml(song.spotifyUrl)}" target="_blank" rel="noopener noreferrer">Abrir no Spotify</a>
             </div>
+            <audio class="song-audio" data-song-audio="${index}" src="${escapeHtml(song.audioUrl || "")}" preload="metadata"></audio>
           </div>
         </article>
       `).join("");
+      bindSongAudioEvents();
     }
 
     function revealSong(index) {
       const card = melFySongsGrid.querySelector(`[data-song-card="${index}"]`);
       const details = card?.querySelector(".song-details");
-      const revealButton = card?.querySelector(".song-reveal-button");
+      const playButton = card?.querySelector(".song-play-button");
 
-      if (!card || !details || !revealButton) {
+      if (!card || !details || !playButton) {
         return;
       }
 
       details.hidden = false;
       card.classList.add("is-open");
-      revealButton.setAttribute("aria-expanded", "true");
+      playButton.setAttribute("aria-expanded", "true");
+    }
+
+    function updateSongPlayback(card, isPlaying, statusText) {
+      const playButton = card?.querySelector(".song-play-button");
+      const status = card?.querySelector(".song-play-status");
+      const title = card?.querySelector("h3")?.textContent || "música";
+
+      if (!card || !playButton || !status) {
+        return;
+      }
+
+      card.classList.toggle("is-playing", isPlaying);
+      playButton.classList.toggle("is-playing", isPlaying);
+      playButton.setAttribute("aria-label", `${isPlaying ? "Pausar" : "Reproduzir"} trecho de ${title}`);
+      status.textContent = statusText || (isPlaying ? "Tocando trecho" : "Reproduzir trecho");
+    }
+
+    function pauseAllSongs(exceptIndex = null) {
+      melFySongsGrid.querySelectorAll(".song-card").forEach((card) => {
+        if (exceptIndex !== null && card.dataset.songCard === String(exceptIndex)) {
+          return;
+        }
+
+        const audio = card.querySelector(".song-audio");
+
+        if (audio) {
+          audio.pause();
+        }
+
+        updateSongPlayback(card, false, "Reproduzir trecho");
+      });
+    }
+
+    function playSong(index) {
+      const card = melFySongsGrid.querySelector(`[data-song-card="${index}"]`);
+      const audio = card?.querySelector(".song-audio");
+
+      if (!card || !audio) {
+        return;
+      }
+
+      revealSong(index);
+
+      if (!audio.getAttribute("src")) {
+        updateSongPlayback(card, false, "Áudio ainda não enviado");
+        return;
+      }
+
+      if (!audio.paused) {
+        audio.pause();
+        updateSongPlayback(card, false, "Reproduzir trecho");
+        return;
+      }
+
+      pauseAllSongs(index);
+
+      const playRequest = audio.play();
+      updateSongPlayback(card, true, "Tocando trecho");
+
+      if (playRequest) {
+        playRequest.catch(() => {
+          updateSongPlayback(card, false, "Áudio ainda não enviado");
+        });
+      }
+    }
+
+    function bindSongAudioEvents() {
+      melFySongsGrid.querySelectorAll(".song-audio").forEach((audio) => {
+        audio.addEventListener("ended", () => {
+          const card = audio.closest(".song-card");
+          updateSongPlayback(card, false, "Reproduzir novamente");
+        });
+
+        audio.addEventListener("error", () => {
+          const card = audio.closest(".song-card");
+
+          if (card?.classList.contains("is-playing")) {
+            updateSongPlayback(card, false, "Áudio ainda não enviado");
+          }
+        });
+      });
     }
 
     function openModal(content) {
@@ -2366,7 +2524,7 @@ Porque conexão leve assim é rara.`
       const showProfilesButton = event.target.closest("[data-show-profiles]");
       const episodeButton = event.target.closest("[data-episode-index]");
       const heroEpisodeButton = event.target.closest("[data-open-episode]");
-      const songRevealButton = event.target.closest("[data-song-reveal]");
+      const songPlayButton = event.target.closest("[data-song-play]");
       const couponReveal = event.target.closest("[data-coupon-reveal]");
       const closeModalAction = event.target.closest("[data-close-modal]");
 
@@ -2388,9 +2546,9 @@ Porque conexão leve assim é rara.`
         openEpisode(index);
       }
 
-      if (songRevealButton) {
-        const index = Number(songRevealButton.dataset.songReveal);
-        revealSong(index);
+      if (songPlayButton) {
+        const index = Number(songPlayButton.dataset.songPlay);
+        playSong(index);
       }
 
       if (couponReveal && maderoGift) {
