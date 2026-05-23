@@ -1151,6 +1151,46 @@
       padding: 0 1.35rem 1.55rem;
     }
 
+    .modal-body.is-entering .modal-kicker,
+    .modal-body.is-entering .modal-title,
+    .modal-body.is-entering .modal-text,
+    .modal-body.is-entering .modal-extra,
+    .modal-body.is-entering .modal-note,
+    .modal-body.is-entering .modal-actions {
+      animation: modalTextIn 620ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .modal-body.is-entering .modal-title {
+      animation-delay: 70ms;
+    }
+
+    .modal-body.is-entering .modal-text {
+      animation-delay: 140ms;
+    }
+
+    .modal-body.is-entering .modal-extra {
+      animation-delay: 210ms;
+    }
+
+    .modal-body.is-entering .modal-note,
+    .modal-body.is-entering .modal-actions {
+      animation-delay: 280ms;
+    }
+
+    @keyframes modalTextIn {
+      from {
+        opacity: 0;
+        transform: translateX(-24px);
+        filter: blur(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+        filter: blur(0);
+      }
+    }
+
     .modal-kicker {
       display: inline-flex;
       margin-bottom: 0.75rem;
@@ -1903,6 +1943,8 @@ Porque conexão leve assim é rara.`
     const episodeRow = document.querySelector("#episodeRow");
     const melFySongsGrid = document.querySelector("#melFySongsGrid");
     const modalOverlay = document.querySelector("#modalOverlay");
+    const modalElement = document.querySelector(".modal");
+    const modalBody = document.querySelector(".modal-body");
     const modalKicker = document.querySelector("#modalKicker");
     const modalTitle = document.querySelector("#modalTitle");
     const modalText = document.querySelector("#modalText");
@@ -2189,6 +2231,8 @@ Porque conexão leve assim é rara.`
         lastFocusedElement = document.activeElement;
       }
 
+      modalBody.classList.remove("is-entering");
+
       modalKicker.textContent = content.kicker || "MelFlix original";
       modalTitle.textContent = content.title || "";
       modalText.textContent = content.text || "";
@@ -2201,6 +2245,9 @@ Porque conexão leve assim é rara.`
       modalOverlay.classList.add("is-open");
       modalOverlay.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
+      modalElement.scrollTo({ top: 0, behavior: "auto" });
+      void modalBody.offsetWidth;
+      modalBody.classList.add("is-entering");
       closeModalButton.focus();
     }
 
