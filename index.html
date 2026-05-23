@@ -788,7 +788,7 @@
     .gift-fire-layer {
       position: fixed;
       inset: 0;
-      z-index: 60;
+      z-index: 90;
       overflow: hidden;
       pointer-events: none;
     }
@@ -797,10 +797,10 @@
       position: absolute;
       left: var(--x);
       top: var(--y);
-      width: 1.05rem;
-      height: 1.35rem;
+      width: 1.28rem;
+      height: 1.64rem;
       opacity: 0;
-      animation: giftFlameRise var(--duration, 1450ms) cubic-bezier(0.2, 0.82, 0.22, 1) forwards;
+      animation: giftFlameRise var(--duration, 2600ms) cubic-bezier(0.18, 0.88, 0.16, 1) forwards;
       animation-delay: var(--delay, 0ms);
       transform-origin: center bottom;
     }
@@ -821,10 +821,24 @@
       transform: rotate(-45deg) scale(var(--scale, 1));
     }
 
+    .gift-flame.is-spark {
+      width: 0.48rem;
+      height: 0.48rem;
+    }
+
+    .gift-flame.is-spark::before {
+      border-radius: 999px;
+      background: radial-gradient(circle, #fff7b1 0 18%, #ffd15c 28% 52%, #f04b1b 68%, transparent 70%);
+      box-shadow:
+        0 0 16px rgba(255, 241, 169, 0.74),
+        0 0 30px rgba(255, 159, 47, 0.44);
+      transform: scale(var(--scale, 1));
+    }
+
     @keyframes giftFlameRise {
       0% {
         opacity: 0;
-        transform: translate(-50%, 12px) scale(0.45) rotate(0deg);
+        transform: translate(-50%, 26px) scale(0.34) rotate(0deg);
       }
 
       14% {
@@ -837,8 +851,26 @@
 
       100% {
         opacity: 0;
-        transform: translate(calc(-50% + var(--drift, 0px)), -180px) scale(0.2) rotate(var(--rotate, 18deg));
+        transform: translate(calc(-50% + var(--drift, 0px)), -390px) scale(0.12) rotate(var(--rotate, 18deg));
       }
+    }
+
+    .gift-popup-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 68;
+      background:
+        radial-gradient(circle at 50% 44%, rgba(255, 209, 92, 0.16), transparent 18rem),
+        rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+
+    .gift-popup-backdrop.is-open {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .coupon-strip h3 {
@@ -871,6 +903,62 @@
     .coupon-gift-panel {
       max-width: 1040px;
       margin: 1rem auto 0;
+    }
+
+    .coupon-gift-panel.is-popup-open {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      z-index: 72;
+      width: min(1040px, calc(100vw - 2rem));
+      max-height: min(82svh, 760px);
+      margin: 0;
+      overflow: auto;
+      animation: giftPopupOpen 680ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .gift-popup-close {
+      position: absolute;
+      top: 0.9rem;
+      right: 0.9rem;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 999px;
+      color: #fff7d6;
+      background: rgba(0, 0, 0, 0.32);
+      border: 1px solid rgba(255, 235, 178, 0.24);
+      font-size: 1.15rem;
+      line-height: 1;
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .gift-popup-close:hover {
+      transform: scale(1.06);
+      background: rgba(0, 0, 0, 0.48);
+    }
+
+    @keyframes giftPopupOpen {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -44%) scale(0.68) rotateX(14deg);
+        filter: blur(10px) saturate(1.2);
+      }
+
+      58% {
+        opacity: 1;
+        transform: translate(-50%, -51.5%) scale(1.035) rotateX(0deg);
+        filter: blur(0) saturate(1.18);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotateX(0deg);
+        filter: blur(0) saturate(1);
+      }
     }
 
     .coupon-strip::before {
@@ -1799,6 +1887,7 @@
 </head>
 <body>
   <div class="ambient" id="ambient" aria-hidden="true"></div>
+  <div class="gift-popup-backdrop" id="giftPopupBackdrop" hidden></div>
 
   <div class="app-shell">
     <section class="profiles-screen" id="profilesScreen" aria-labelledby="profilesTitle">
@@ -1855,6 +1944,7 @@
           </div>
 
           <div class="coupon-strip coupon-gift-panel reveal-on-scroll" id="maderoGift" hidden>
+            <button class="gift-popup-close" type="button" data-gift-close aria-label="Fechar presente">&times;</button>
             <div class="coupon-copy">
               <h3>Convite dourado</h3>
               <span class="coupon-eyebrow">CUPOM DESBLOQUEADO</span>
@@ -2077,6 +2167,9 @@ Porque conexão leve assim é rara.`
     const modalActions = document.querySelector("#modalActions");
     const closeModalButton = document.querySelector("#closeModal");
     const maderoGift = document.querySelector("#maderoGift");
+    const giftPopupBackdrop = document.querySelector("#giftPopupBackdrop");
+    const giftOriginalParent = maderoGift?.parentElement;
+    const giftOriginalNextSibling = maderoGift?.nextElementSibling;
     const giftAudio = new Audio("do-do-do.mp3");
     giftAudio.preload = "auto";
 
@@ -2458,17 +2551,18 @@ Porque conexão leve assim é rara.`
       layer.className = "gift-fire-layer";
       layer.setAttribute("aria-hidden", "true");
 
-      for (let index = 0; index < 26; index += 1) {
+      for (let index = 0; index < 72; index += 1) {
         const flame = document.createElement("span");
-        const spread = (Math.random() - 0.5) * Math.min(rect.width + 120, 260);
-        const lift = (Math.random() - 0.5) * 28;
-        const drift = (Math.random() - 0.5) * 170;
-        const rotate = (Math.random() - 0.5) * 90;
-        const scale = 0.62 + Math.random() * 0.9;
-        const delay = Math.random() * 260;
-        const duration = 1180 + Math.random() * 520;
+        const isSpark = index % 3 === 0;
+        const spread = (Math.random() - 0.5) * Math.min(rect.width + 260, 520);
+        const lift = (Math.random() - 0.5) * 72;
+        const drift = (Math.random() - 0.5) * 360;
+        const rotate = (Math.random() - 0.5) * 140;
+        const scale = isSpark ? 0.72 + Math.random() * 1.35 : 0.72 + Math.random() * 1.15;
+        const delay = Math.random() * 680;
+        const duration = 2300 + Math.random() * 1200;
 
-        flame.className = "gift-flame";
+        flame.className = `gift-flame${isSpark ? " is-spark" : ""}`;
         flame.style.setProperty("--x", `${centerX + spread}px`);
         flame.style.setProperty("--y", `${centerY + lift}px`);
         flame.style.setProperty("--drift", `${drift}px`);
@@ -2480,7 +2574,41 @@ Porque conexão leve assim é rara.`
       }
 
       document.body.appendChild(layer);
-      window.setTimeout(() => layer.remove(), 2100);
+      window.setTimeout(() => layer.remove(), 4300);
+    }
+
+    function openGiftPopup(triggerElement) {
+      if (!maderoGift || !giftPopupBackdrop) {
+        return;
+      }
+
+      pauseAllSongs();
+      maderoGift.hidden = false;
+      document.body.appendChild(maderoGift);
+      giftPopupBackdrop.hidden = false;
+      maderoGift.classList.add("is-visible", "is-popup-open");
+      giftPopupBackdrop.classList.add("is-open");
+      document.body.style.overflow = "hidden";
+      playGiftAudio();
+      launchGiftFlames(triggerElement);
+
+      window.setTimeout(() => launchGiftFlames(maderoGift), 520);
+    }
+
+    function closeGiftPopup() {
+      if (!maderoGift || !giftPopupBackdrop) {
+        return;
+      }
+
+      maderoGift.classList.remove("is-popup-open");
+      giftPopupBackdrop.classList.remove("is-open");
+      giftPopupBackdrop.hidden = true;
+
+      if (giftOriginalParent) {
+        giftOriginalParent.insertBefore(maderoGift, giftOriginalNextSibling);
+      }
+
+      document.body.style.overflow = "";
     }
 
     function openModal(content) {
@@ -2627,6 +2755,7 @@ Porque conexão leve assim é rara.`
       const heroEpisodeButton = event.target.closest("[data-open-episode]");
       const songPlayButton = event.target.closest("[data-song-play]");
       const couponReveal = event.target.closest("[data-coupon-reveal]");
+      const giftCloseButton = event.target.closest("[data-gift-close]");
       const closeModalAction = event.target.closest("[data-close-modal]");
 
       if (profileButton) {
@@ -2653,14 +2782,13 @@ Porque conexão leve assim é rara.`
       }
 
       if (couponReveal && maderoGift) {
-        pauseAllSongs();
-        maderoGift.hidden = false;
-        maderoGift.classList.add("is-visible");
         couponReveal.setAttribute("aria-expanded", "true");
-        playGiftAudio();
-        launchGiftFlames(couponReveal);
         couponReveal.hidden = true;
-        maderoGift.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        openGiftPopup(couponReveal);
+      }
+
+      if (giftCloseButton || event.target === giftPopupBackdrop) {
+        closeGiftPopup();
       }
 
       if (closeModalAction) {
