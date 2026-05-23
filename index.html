@@ -690,11 +690,99 @@
       gap: clamp(0.9rem, 2vw, 1.1rem);
     }
 
+    .gift-unlock,
     .coupon-strip {
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035));
       box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
+    }
+
+    .gift-unlock {
+      display: grid;
+      place-items: center;
+      gap: 0.85rem;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: clamp(1.25rem, 4vw, 2rem);
+      text-align: center;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 217, 121, 0.22), transparent 12rem),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.028));
+    }
+
+    .gift-unlock h2 {
+      font-size: clamp(1.55rem, 4vw, 2.25rem);
+      line-height: 1.08;
+      font-weight: 950;
+    }
+
+    .gift-unlock p {
+      max-width: 28rem;
+      color: rgba(255, 246, 226, 0.78);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .gift-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      min-height: 3.1rem;
+      margin-top: 0.25rem;
+      padding: 0.78rem 1.15rem;
+      border-radius: 999px;
+      color: #2b1704;
+      background:
+        linear-gradient(135deg, #fff4be 0%, #ffd15c 44%, #b97618 100%);
+      border: 1px solid rgba(255, 240, 186, 0.74);
+      box-shadow:
+        0 16px 34px rgba(255, 188, 54, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.72);
+      font-weight: 950;
+      letter-spacing: 0;
+      transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+    }
+
+    .gift-button:hover {
+      transform: translateY(-2px);
+      filter: saturate(1.08);
+      box-shadow:
+        0 20px 46px rgba(255, 188, 54, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    }
+
+    .gift-icon {
+      position: relative;
+      width: 1rem;
+      height: 0.9rem;
+      border-radius: 3px;
+      background: rgba(43, 23, 4, 0.88);
+      box-shadow: 0 -0.28rem 0 -0.08rem rgba(43, 23, 4, 0.88);
+    }
+
+    .gift-icon::before,
+    .gift-icon::after {
+      content: "";
+      position: absolute;
+      background: #ffd15c;
+      opacity: 0.92;
+    }
+
+    .gift-icon::before {
+      left: 50%;
+      top: -0.28rem;
+      width: 0.16rem;
+      height: 1.18rem;
+      transform: translateX(-50%);
+    }
+
+    .gift-icon::after {
+      left: -0.08rem;
+      right: -0.08rem;
+      top: 0.32rem;
+      height: 0.15rem;
     }
 
     .coupon-strip h3 {
@@ -722,6 +810,11 @@
         radial-gradient(circle at 96% 18%, rgba(229, 9, 20, 0.24), transparent 13rem),
         linear-gradient(135deg, rgba(74, 33, 14, 0.78), rgba(16, 12, 11, 0.96) 48%, rgba(112, 28, 18, 0.74));
       box-shadow: 0 28px 70px rgba(0, 0, 0, 0.36);
+    }
+
+    .coupon-gift-panel {
+      max-width: 1040px;
+      margin: 1rem auto 0;
     }
 
     .coupon-strip::before {
@@ -1224,6 +1317,16 @@
         padding: 1rem;
       }
 
+      .melflix-experience .gift-unlock {
+        max-width: 420px;
+        padding: 1.15rem;
+      }
+
+      .melflix-experience .gift-button {
+        width: 100%;
+        min-height: 48px;
+      }
+
       .melflix-experience .coupon-copy {
         padding: 0.75rem;
       }
@@ -1373,6 +1476,7 @@
 
       .hero-actions,
       .section-header,
+      .gift-unlock,
       .coupon-strip {
         align-items: stretch;
         grid-template-columns: 1fr;
@@ -1506,9 +1610,19 @@
         </section>
 
         <section class="section" aria-labelledby="couponTitle">
-          <div class="coupon-strip reveal-on-scroll">
+          <div class="gift-unlock reveal-on-scroll">
+            <span class="coupon-eyebrow">presente desbloqueável</span>
+            <h2 id="couponTitle">Madero com a Mel</h2>
+            <p>um convite pequeno, dourado e guardado só para abrir quando bater vontade.</p>
+            <button class="gift-button" type="button" data-coupon-reveal aria-expanded="false" aria-controls="maderoGift">
+              <span class="gift-icon" aria-hidden="true"></span>
+              abrir presente
+            </button>
+          </div>
+
+          <div class="coupon-strip coupon-gift-panel reveal-on-scroll" id="maderoGift" hidden>
             <div class="coupon-copy">
-              <h3 id="couponTitle">Madero com a Mel EBAAAAAAAA</h3>
+              <h3>Madero com a Mel</h3>
               <span class="coupon-eyebrow">CUPOM DESBLOQUEADO</span>
               <strong class="coupon-code">Código: MEL-MADERO</strong>
               <p class="coupon-text">um vale-madero pra gente sair qualquer sábado que você estiver tranquila, belê? Pra eu comemorar você com calma 🤍</p>
@@ -1682,21 +1796,21 @@ Porque conexão leve assim é rara.`
         title: "Só me Ligar",
         artist: "BK",
         spotifyUrl: "https://open.spotify.com/track/31ySVMbs7U8LOuy7w4McR9?si=6EPqXzLUTVmZpodFAbI8cA&rowId=3f07897ed2595c85",
-        cover: "343E7364-33C2-4B91-A1F1-736E4DC0714C.jpeg",
+        cover: "https://i1.sndcdn.com/artworks-myEbm2h93kP4-0-t1080x1080.jpg",
         excerpt: "1:10 - 1:48"
       },
       {
         title: "Me Chamando de Paixão",
         artist: "Jorge Ben Jor",
         spotifyUrl: "https://open.spotify.com/track/5ayMrwnzBZ9QanL2M9A5Ey?si=UckQ953DRT2mOgb7M8P3ew",
-        cover: "E9D987B0-6186-4C36-90C5-5D36EF8F8931.jpeg",
+        cover: "https://i1.sndcdn.com/artworks-rzuNfMa8qtNf-0-t1080x1080.jpg",
         excerpt: "2:09 - 2:50"
       },
       {
         title: "Fashion Bae",
         artist: "Yunk Vino",
         spotifyUrl: "https://open.spotify.com/track/1sCEFE2ZAGhbplDE8PhpH6?si=PEPWTGQFT5GGHcJ8h5Ugzg",
-        cover: "04B224B8-3A72-49EF-9F7E-22D987152BAF.jpeg",
+        cover: "https://i1.sndcdn.com/artworks-eXdIXeH276mF-0-t1080x1080.jpg",
         excerpt: "1:22 - 1:40"
       }
     ];
@@ -1721,6 +1835,8 @@ Porque conexão leve assim é rara.`
     const modalExtra = document.querySelector("#modalExtra");
     const modalNote = document.querySelector("#modalNote");
     const closeModalButton = document.querySelector("#closeModal");
+    const couponRevealButton = document.querySelector("[data-coupon-reveal]");
+    const maderoGift = document.querySelector("#maderoGift");
 
     let lastFocusedElement = null;
 
@@ -2105,6 +2221,7 @@ Porque conexão leve assim é rara.`
       const episodeButton = event.target.closest("[data-episode-index]");
       const heroEpisodeButton = event.target.closest("[data-open-episode]");
       const songRevealButton = event.target.closest("[data-song-reveal]");
+      const couponReveal = event.target.closest("[data-coupon-reveal]");
 
       if (profileButton) {
         showProfile(profileButton.dataset.profile);
@@ -2127,6 +2244,14 @@ Porque conexão leve assim é rara.`
       if (songRevealButton) {
         const index = Number(songRevealButton.dataset.songReveal);
         revealSong(index);
+      }
+
+      if (couponReveal && maderoGift) {
+        maderoGift.hidden = false;
+        maderoGift.classList.add("is-visible");
+        couponReveal.setAttribute("aria-expanded", "true");
+        couponReveal.innerHTML = '<span class="gift-icon" aria-hidden="true"></span>presente aberto';
+        maderoGift.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
 
       if (event.target === modalOverlay) {
