@@ -753,6 +753,26 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.78);
     }
 
+    .gift-button.is-reopen {
+      color: #101216;
+      background:
+        linear-gradient(135deg, #ffffff 0%, #dfe5ef 42%, #9aa4b3 100%);
+      border-color: rgba(255, 255, 255, 0.82);
+      box-shadow:
+        0 16px 34px rgba(207, 219, 235, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.88);
+    }
+
+    .gift-button.is-reopen .gift-icon {
+      background: rgba(16, 18, 22, 0.88);
+      box-shadow: 0 -0.28rem 0 -0.08rem rgba(16, 18, 22, 0.88);
+    }
+
+    .gift-button.is-reopen .gift-icon::before,
+    .gift-button.is-reopen .gift-icon::after {
+      background: #edf2f8;
+    }
+
     .gift-icon {
       position: relative;
       width: 1rem;
@@ -791,6 +811,18 @@
       z-index: 90;
       overflow: hidden;
       pointer-events: none;
+    }
+
+    .gift-fire-layer::before {
+      content: "";
+      position: absolute;
+      inset: -12%;
+      background:
+        radial-gradient(circle at 50% 54%, rgba(255, 218, 100, 0.34), transparent 20rem),
+        radial-gradient(circle at 18% 34%, rgba(255, 106, 44, 0.22), transparent 13rem),
+        radial-gradient(circle at 82% 28%, rgba(255, 240, 178, 0.2), transparent 12rem);
+      opacity: 0;
+      animation: giftSkyGlow 3200ms ease-out forwards;
     }
 
     .gift-flame {
@@ -835,6 +867,43 @@
       transform: scale(var(--scale, 1));
     }
 
+    .gift-burst {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--size, 12rem);
+      height: var(--size, 12rem);
+      border-radius: 999px;
+      opacity: 0;
+      background:
+        radial-gradient(circle, rgba(255, 247, 177, 0.95) 0 0.22rem, transparent 0.28rem),
+        repeating-conic-gradient(from var(--angle, 0deg), transparent 0deg 8deg, rgba(255, 247, 177, 0.95) 9deg 12deg, transparent 13deg 22deg, rgba(255, 127, 46, 0.78) 23deg 25deg, transparent 26deg 36deg);
+      filter: drop-shadow(0 0 18px rgba(255, 209, 92, 0.45));
+      animation: giftBurst var(--burst-duration, 2100ms) cubic-bezier(0.12, 0.82, 0.18, 1) forwards;
+      animation-delay: var(--delay, 0ms);
+    }
+
+    .gift-burst::after {
+      content: "";
+      position: absolute;
+      inset: 42%;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 247, 177, 0.8);
+      box-shadow: 0 0 26px rgba(255, 209, 92, 0.55);
+    }
+
+    @keyframes giftSkyGlow {
+      0%,
+      100% {
+        opacity: 0;
+      }
+
+      22%,
+      72% {
+        opacity: 1;
+      }
+    }
+
     @keyframes giftFlameRise {
       0% {
         opacity: 0;
@@ -852,6 +921,26 @@
       100% {
         opacity: 0;
         transform: translate(calc(-50% + var(--drift, 0px)), -390px) scale(0.12) rotate(var(--rotate, 18deg));
+      }
+    }
+
+    @keyframes giftBurst {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.08) rotate(0deg);
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      64% {
+        opacity: 0.92;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.35) rotate(var(--rotate, 96deg));
       }
     }
 
@@ -922,7 +1011,7 @@
       top: 0.9rem;
       right: 0.9rem;
       z-index: 3;
-      display: inline-flex;
+      display: none;
       align-items: center;
       justify-content: center;
       width: 2.25rem;
@@ -939,6 +1028,10 @@
     .gift-popup-close:hover {
       transform: scale(1.06);
       background: rgba(0, 0, 0, 0.48);
+    }
+
+    .coupon-gift-panel.is-popup-open .gift-popup-close {
+      display: inline-flex;
     }
 
     @keyframes giftPopupOpen {
@@ -1624,6 +1717,66 @@
         min-height: 0;
         aspect-ratio: 1 / 1;
         border-radius: 8px;
+      }
+
+      .coupon-gift-panel.is-popup-open {
+        top: 50%;
+        width: min(430px, calc(100vw - 1rem - env(safe-area-inset-left) - env(safe-area-inset-right)));
+        max-height: calc(100svh - 1.35rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        grid-template-columns: 1fr;
+        gap: 0.74rem;
+        padding: 0.78rem;
+        border-radius: 14px;
+      }
+
+      .coupon-gift-panel.is-popup-open::before {
+        inset: 0.48rem;
+        border-radius: 11px;
+      }
+
+      .coupon-gift-panel.is-popup-open .gift-popup-close {
+        top: 0.72rem;
+        right: 0.72rem;
+        width: 2.15rem;
+        height: 2.15rem;
+      }
+
+      .coupon-gift-panel.is-popup-open .coupon-copy {
+        min-height: auto;
+        padding: 0.82rem 2.55rem 0.12rem 0.55rem;
+      }
+
+      .coupon-gift-panel.is-popup-open .coupon-eyebrow {
+        margin-top: 0.42rem;
+        font-size: 0.64rem;
+      }
+
+      .coupon-gift-panel.is-popup-open h3 {
+        font-size: clamp(1.35rem, 7vw, 1.85rem);
+      }
+
+      .coupon-gift-panel.is-popup-open .coupon-code {
+        margin-top: 0.58rem;
+        padding: 0.55rem 0.62rem;
+        font-size: 0.9rem;
+      }
+
+      .coupon-gift-panel.is-popup-open .coupon-text {
+        margin-top: 0.48rem;
+        font-size: 0.88rem;
+        line-height: 1.45;
+      }
+
+      .coupon-gift-panel.is-popup-open .coupon-gifs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+      }
+
+      .coupon-gift-panel.is-popup-open .coupon-gif {
+        min-height: 0;
+        max-height: 150px;
+        aspect-ratio: 1 / 1;
+        border-radius: 9px;
       }
 
       .melfy-experience {
@@ -2538,6 +2691,11 @@ Porque conexão leve assim é rara.`
       giftAudio.play().catch(() => {});
     }
 
+    function stopGiftAudio() {
+      giftAudio.pause();
+      giftAudio.currentTime = 0;
+    }
+
     function launchGiftFlames(originElement) {
       if (revealMotionQuery.matches || !originElement) {
         return;
@@ -2551,16 +2709,37 @@ Porque conexão leve assim é rara.`
       layer.className = "gift-fire-layer";
       layer.setAttribute("aria-hidden", "true");
 
-      for (let index = 0; index < 72; index += 1) {
+      [
+        [centerX, centerY - 70],
+        [window.innerWidth * 0.18, window.innerHeight * 0.25],
+        [window.innerWidth * 0.82, window.innerHeight * 0.23],
+        [window.innerWidth * 0.25, window.innerHeight * 0.62],
+        [window.innerWidth * 0.76, window.innerHeight * 0.58],
+        [centerX, Math.max(120, centerY - 190)]
+      ].forEach(([x, y], burstIndex) => {
+        const burst = document.createElement("span");
+
+        burst.className = "gift-burst";
+        burst.style.setProperty("--x", `${x}px`);
+        burst.style.setProperty("--y", `${y}px`);
+        burst.style.setProperty("--size", `${9 + Math.random() * 8}rem`);
+        burst.style.setProperty("--angle", `${Math.random() * 180}deg`);
+        burst.style.setProperty("--rotate", `${74 + Math.random() * 70}deg`);
+        burst.style.setProperty("--delay", `${burstIndex * 110 + Math.random() * 120}ms`);
+        burst.style.setProperty("--burst-duration", `${1850 + Math.random() * 900}ms`);
+        layer.appendChild(burst);
+      });
+
+      for (let index = 0; index < 96; index += 1) {
         const flame = document.createElement("span");
         const isSpark = index % 3 === 0;
-        const spread = (Math.random() - 0.5) * Math.min(rect.width + 260, 520);
-        const lift = (Math.random() - 0.5) * 72;
-        const drift = (Math.random() - 0.5) * 360;
+        const spread = (Math.random() - 0.5) * Math.min(rect.width + 360, 660);
+        const lift = (Math.random() - 0.5) * 96;
+        const drift = (Math.random() - 0.5) * 440;
         const rotate = (Math.random() - 0.5) * 140;
         const scale = isSpark ? 0.72 + Math.random() * 1.35 : 0.72 + Math.random() * 1.15;
-        const delay = Math.random() * 680;
-        const duration = 2300 + Math.random() * 1200;
+        const delay = Math.random() * 880;
+        const duration = 2800 + Math.random() * 1500;
 
         flame.className = `gift-flame${isSpark ? " is-spark" : ""}`;
         flame.style.setProperty("--x", `${centerX + spread}px`);
@@ -2574,7 +2753,20 @@ Porque conexão leve assim é rara.`
       }
 
       document.body.appendChild(layer);
-      window.setTimeout(() => layer.remove(), 4300);
+      window.setTimeout(() => layer.remove(), 5600);
+    }
+
+    function setGiftButtonReopenState() {
+      const giftButton = document.querySelector("[data-coupon-reveal]");
+
+      if (!giftButton) {
+        return;
+      }
+
+      giftButton.hidden = false;
+      giftButton.classList.add("is-reopen");
+      giftButton.setAttribute("aria-expanded", "false");
+      giftButton.innerHTML = '<span class="gift-icon" aria-hidden="true"></span>abrir novamente';
     }
 
     function openGiftPopup(triggerElement) {
@@ -2600,9 +2792,11 @@ Porque conexão leve assim é rara.`
         return;
       }
 
+      stopGiftAudio();
       maderoGift.classList.remove("is-popup-open");
       giftPopupBackdrop.classList.remove("is-open");
       giftPopupBackdrop.hidden = true;
+      setGiftButtonReopenState();
 
       if (giftOriginalParent) {
         giftOriginalParent.insertBefore(maderoGift, giftOriginalNextSibling);
@@ -2783,7 +2977,6 @@ Porque conexão leve assim é rara.`
 
       if (couponReveal && maderoGift) {
         couponReveal.setAttribute("aria-expanded", "true");
-        couponReveal.hidden = true;
         openGiftPopup(couponReveal);
       }
 
