@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MelFlix & MelFy | Feliz aniversario, Mel</title>
+  <style>
+    :root {
+      --bg: #06070a;
+      --bg-soft: #101116;
+      --panel: #17181f;
+      --panel-light: #23242c;
+      --red: #e50914;
+      --red-soft: #ff4b55;
+      --green: #1db954;
+      --green-soft: #4de083;
+      --white: #f8f8f8;
+      --muted: #b9bac5;
+      --soft: #f2dede;
+      --line: rgba(255, 255, 255, 0.1);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.46);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(229, 9, 20, 0.18), transparent 28rem),
+        radial-gradient(circle at 92% 18%, rgba(29, 185, 84, 0.12), transparent 24rem),
+        linear-gradient(180deg, #090a0e 0%, var(--bg) 48%, #08080b 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent 78%);
+    }
+
+    button,
+    a,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .sparkle {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.22);
+      font-size: 0.75rem;
+      line-height: 1;
+      opacity: 0;
+      animation: floatSparkle var(--duration, 11s) linear infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .sparkle.heart {
+      color: rgba(255, 75, 85, 0.18);
+      font-size: 0.62rem;
+    }
+
+    @keyframes floatSparkle {
+      0% {
+        transform: translate3d(0, 18px, 0) scale(0.7);
+        opacity: 0;
+      }
+      18%,
+      78% {
+        opacity: var(--opacity, 0.36);
+      }
+      100% {
+        transform: translate3d(18px, -120px, 0) scale(1.05);
+        opacity: 0;
+      }
+    }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+
+    @supports (min-height: 100svh) {
+      .app-shell,
+      .melfy-experience {
+        min-height: 100svh;
+      }
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .profiles-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: clamp(1.25rem, 4vw, 3rem);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(229, 9, 20, 0.2), transparent 22rem),
+        radial-gradient(circle at 82% 28%, rgba(29, 185, 84, 0.16), transparent 22rem),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.44));
+    }
+
+    .profiles-inner {
+      width: min(960px, 100%);
+      text-align: center;
+    }
+
+    .profiles-title {
+      font-size: clamp(2.4rem, 7vw, 5.8rem);
+      line-height: 0.95;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .profiles-subtitle {
+      max-width: 36rem;
+      margin: 1rem auto 0;
+      color: rgba(248, 248, 248, 0.72);
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.6;
+    }
+
+    .profiles-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(1rem, 3vw, 1.5rem);
+      margin-top: clamp(2rem, 6vw, 4rem);
+    }
+
+    .profile-card {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      gap: 1rem;
+      min-height: 320px;
+      padding: 1.25rem;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+      transition: transform 200ms ease, border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+    }
+
+    .profile-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--profile-glow);
+      opacity: 0.52;
+      transition: opacity 200ms ease;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-8px) scale(1.012);
+      border-color: var(--profile-color);
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: 0 28px 76px rgba(0, 0, 0, 0.38);
+    }
+
+    .profile-card:hover::before {
+      opacity: 0.75;
+    }
+
+    .profile-avatar {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: min(180px, 38vw);
+      aspect-ratio: 1;
+      margin-top: 1rem;
+      overflow: hidden;
+      border-radius: 26px;
+      background: var(--profile-avatar);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -18px 40px rgba(0, 0, 0, 0.18),
+        0 20px 50px var(--profile-shadow);
+    }
+
+    .profile-avatar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.24), transparent 24%),
+        radial-gradient(circle at 72% 8%, rgba(255, 255, 255, 0.12), transparent 28%);
+      pointer-events: none;
+    }
+
+    .profile-logo-svg {
+      position: relative;
+      z-index: 1;
+      width: 76%;
+      height: 76%;
+      overflow: visible;
+      filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.28));
+    }
+
+    .profile-copy {
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-copy h2 {
+      margin: 0;
+      font-size: clamp(1.45rem, 3vw, 2.2rem);
+      line-height: 1.1;
+      font-weight: 950;
+    }
+
+    .profile-copy p {
+      margin: 0.45rem 0 0;
+      color: rgba(248, 248, 248, 0.72);
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+
+    .experience {
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem clamp(1rem, 4vw, 3.25rem);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: linear-gradient(180deg, rgba(6, 7, 10, 0.96), rgba(6, 7, 10, 0.72));
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.42rem;
+      margin: 0;
+      color: var(--brand-color);
+      font-size: clamp(1.55rem, 4vw, 2.7rem);
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      width: 0.62em;
+      height: 1em;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--brand-dark), var(--brand-color), var(--brand-soft));
+      box-shadow: 0 0 24px var(--brand-shadow);
+      transform: skewX(-8deg);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .switch-button,
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.55rem;
+      padding: 0.64rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+      font-weight: 850;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .switch-button:hover,
+    .back-button:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.26);
+      background: rgba(255, 255, 255, 0.11);
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      align-items: end;
+      min-height: min(760px, 86vh);
+      padding: clamp(4.5rem, 8vw, 8rem) clamp(1rem, 4vw, 3.25rem) clamp(2.4rem, 6vw, 5rem);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: var(--hero-bg);
+    }
+
+    .hero::after {
+      content: attr(data-watermark);
+      position: absolute;
+      right: clamp(-1.4rem, 4vw, 3rem);
+      bottom: clamp(1rem, 7vw, 4.8rem);
+      z-index: -1;
+      color: rgba(255, 255, 255, 0.045);
+      font-size: clamp(8rem, 24vw, 25rem);
+      font-weight: 950;
+      letter-spacing: 0;
+      line-height: 0.78;
+      transform: skewX(-8deg);
+      user-select: none;
+    }
+
+    .hero-content {
+      max-width: 740px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0 0 1.15rem;
+      color: var(--soft);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 2rem;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--brand-color);
+      box-shadow: 0 0 18px var(--brand-shadow);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .hero h1 {
+      max-width: 12ch;
+      font-size: clamp(3rem, 10vw, 7.4rem);
+      line-height: 0.93;
+      font-weight: 950;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .subtitle {
+      max-width: 640px;
+      margin-top: 1.15rem;
+      color: rgba(248, 248, 248, 0.88);
+      font-size: clamp(1.1rem, 2.4vw, 1.48rem);
+      line-height: 1.5;
+      text-wrap: balance;
+    }
+
+    .typed-line {
+      display: inline-flex;
+      align-items: center;
+      min-height: 1.65rem;
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 2vw, 1.08rem);
+      line-height: 1.45;
+    }
+
+    .typed-line::after {
+      content: "";
+      width: 2px;
+      height: 1.1em;
+      margin-left: 0.25rem;
+      background: var(--brand-soft);
+      animation: caret 900ms steps(1) infinite;
+    }
+
+    @keyframes caret {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      min-height: 3rem;
+      padding: 0.86rem 1.15rem;
+      border-radius: var(--radius);
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid transparent;
+      font-weight: 850;
+      text-decoration: none;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: var(--brand-color);
+      box-shadow: 0 14px 32px var(--brand-shadow);
+    }
+
+    .btn-primary:hover {
+      background: var(--brand-soft);
+      color: #06130c;
+      box-shadow: 0 18px 44px var(--brand-shadow);
+    }
+
+    .melflix-experience .btn-primary:hover {
+      color: #ffffff;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .play-symbol {
+      width: 0;
+      height: 0;
+      border-top: 0.42rem solid transparent;
+      border-bottom: 0.42rem solid transparent;
+      border-left: 0.68rem solid currentColor;
+    }
+
+    .section {
+      scroll-margin-top: 6rem;
+      padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3.25rem);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .section h2 {
+      font-size: clamp(1.45rem, 3.3vw, 2.25rem);
+      line-height: 1.1;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .section-note {
+      max-width: 34rem;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
+
+    .melflix-experience {
+      --brand-color: var(--red);
+      --brand-soft: var(--red-soft);
+      --brand-dark: #b20710;
+      --brand-shadow: rgba(229, 9, 20, 0.36);
+      --hero-bg:
+        linear-gradient(90deg, rgba(6, 7, 10, 0.95) 0%, rgba(6, 7, 10, 0.72) 42%, rgba(6, 7, 10, 0.3) 100%),
+        linear-gradient(0deg, var(--bg) 0%, rgba(6, 7, 10, 0.08) 42%, rgba(6, 7, 10, 0.12) 100%),
+        radial-gradient(circle at 78% 30%, rgba(229, 9, 20, 0.36), transparent 20rem),
+        radial-gradient(circle at 64% 62%, rgba(255, 255, 255, 0.08), transparent 16rem);
+    }
+
+    .melfy-experience {
+      --brand-color: var(--green);
+      --brand-soft: var(--green-soft);
+      --brand-dark: #0f7534;
+      --brand-shadow: rgba(29, 185, 84, 0.34);
+      --hero-bg:
+        linear-gradient(90deg, rgba(6, 7, 10, 0.95) 0%, rgba(6, 7, 10, 0.72) 44%, rgba(6, 7, 10, 0.28) 100%),
+        linear-gradient(0deg, var(--bg) 0%, rgba(6, 7, 10, 0.06) 46%, rgba(6, 7, 10, 0.12) 100%),
+        radial-gradient(circle at 78% 28%, rgba(29, 185, 84, 0.34), transparent 20rem),
+        radial-gradient(circle at 58% 66%, rgba(77, 224, 131, 0.1), transparent 16rem);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      gap: 1rem;
+      overflow-x: auto;
+      padding: 0.25rem 0 1.2rem;
+      scroll-snap-type: x proximity;
+      scrollbar-color: rgba(255, 255, 255, 0.24) transparent;
+    }
+
+    .row::-webkit-scrollbar {
+      height: 0.6rem;
+    }
+
+    .row::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+    }
+
+    .episode-card {
+      position: relative;
+      min-height: 292px;
+      padding: 1rem;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background-color: #141018;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 26%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.82) 100%),
+        var(--card-image, none),
+        var(--card-gradient, linear-gradient(135deg, #331316, #15161b));
+      background-position: center;
+      background-size: cover;
+      color: var(--white);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+      text-align: left;
+      scroll-snap-align: start;
+      transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease, filter 200ms ease;
+    }
+
+    .episode-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, transparent 8%, rgba(0, 0, 0, 0.12) 44%, rgba(0, 0, 0, 0.78) 100%),
+        radial-gradient(circle at 72% 24%, rgba(255, 255, 255, 0.18), transparent 5.5rem);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .episode-card::after {
+      content: attr(data-number);
+      position: absolute;
+      right: -0.2rem;
+      top: 1rem;
+      color: rgba(255, 255, 255, 0.1);
+      font-size: 5.4rem;
+      font-weight: 950;
+      line-height: 0.85;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .episode-card:hover {
+      transform: translateY(-8px) scale(1.015);
+      border-color: rgba(255, 255, 255, 0.22);
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.42);
+      filter: saturate(1.08);
+    }
+
+    .episode-cover {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: var(--card-position, center);
+      transform: scale(var(--card-scale, 1));
+      transform-origin: var(--card-position, center);
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 0.72rem;
+      min-height: 260px;
+    }
+
+    .watch-state {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.42rem;
+      padding: 0.34rem 0.56rem;
+      border-radius: 999px;
+      color: rgba(255, 255, 255, 0.88);
+      background: rgba(0, 0, 0, 0.32);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.7rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .watch-state.is-watched {
+      color: #d7ffe4;
+      border-color: rgba(77, 224, 131, 0.38);
+      background: rgba(29, 185, 84, 0.18);
+    }
+
+    .watch-state.is-unwatched {
+      color: rgba(248, 248, 248, 0.74);
+    }
+
+    .watch-dot {
+      width: 0.48rem;
+      height: 0.48rem;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: currentColor;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+    }
+
+    .episode-card h3 {
+      max-width: 13rem;
+      font-size: 1.18rem;
+      line-height: 1.15;
+      font-weight: 950;
+      text-wrap: balance;
+    }
+
+    .song-grid {
+      display: grid;
+      gap: clamp(0.9rem, 2vw, 1.1rem);
+    }
+
+    .coupon-strip {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035));
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
+    }
+
+    .coupon-strip h3 {
+      font-size: clamp(1.2rem, 3vw, 1.7rem);
+      line-height: 1.15;
+      font-weight: 950;
+    }
+
+    .coupon-strip p {
+      margin-top: 0.5rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .coupon-strip {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(280px, 1.05fr);
+      gap: clamp(1rem, 3vw, 1.5rem);
+      align-items: stretch;
+      overflow: hidden;
+      padding: clamp(1rem, 3vw, 1.35rem);
+      background:
+        radial-gradient(circle at 14% 8%, rgba(255, 205, 89, 0.24), transparent 12rem),
+        radial-gradient(circle at 96% 18%, rgba(229, 9, 20, 0.24), transparent 13rem),
+        linear-gradient(135deg, rgba(74, 33, 14, 0.78), rgba(16, 12, 11, 0.96) 48%, rgba(112, 28, 18, 0.74));
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.36);
+    }
+
+    .coupon-strip::before {
+      content: "";
+      position: absolute;
+      inset: 0.75rem;
+      border: 1px dashed rgba(255, 214, 123, 0.46);
+      border-radius: 10px;
+      pointer-events: none;
+    }
+
+    .coupon-copy {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      align-content: center;
+      min-height: 100%;
+      padding: clamp(1rem, 3vw, 1.4rem);
+    }
+
+    .coupon-eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 0.85rem;
+      padding: 0.38rem 0.62rem;
+      border-radius: 999px;
+      color: #2b1208;
+      background: linear-gradient(90deg, #ffd15c, #ffefb4);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 22px rgba(255, 188, 54, 0.2);
+    }
+
+    .coupon-code {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 0.8rem;
+      padding: 0.68rem 0.82rem;
+      border: 1px solid rgba(255, 214, 123, 0.48);
+      border-radius: 8px;
+      color: #fff7da;
+      background: rgba(0, 0, 0, 0.28);
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .coupon-text {
+      max-width: 34rem;
+      color: rgba(255, 246, 226, 0.84);
+      font-size: 1rem;
+    }
+
+    .coupon-gifs {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    .coupon-gif {
+      width: 100%;
+      height: 100%;
+      min-height: 240px;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 22px 44px rgba(0, 0, 0, 0.34);
+      background: rgba(0, 0, 0, 0.24);
+    }
+
+    .final-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.85rem;
+      padding: 0 clamp(1rem, 4vw, 3.25rem) 3rem;
+    }
+
+    .melfy-section {
+      background:
+        radial-gradient(circle at 14% 20%, rgba(29, 185, 84, 0.16), transparent 22rem),
+        linear-gradient(180deg, rgba(29, 185, 84, 0.03), transparent 42%);
+    }
+
+    .melfy-section .section-header {
+      max-width: 1120px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .song-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: 0.85rem;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: var(--white);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(29, 185, 84, 0.12), transparent 10rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.032));
+      text-align: left;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+      transition: transform 200ms ease, background 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+    }
+
+    .song-card:hover,
+    .song-card.is-open {
+      transform: translateY(-5px);
+      border-color: rgba(29, 185, 84, 0.42);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(29, 185, 84, 0.2), transparent 10rem),
+        linear-gradient(180deg, rgba(29, 185, 84, 0.14), rgba(255, 255, 255, 0.045));
+      box-shadow: 0 24px 58px rgba(0, 0, 0, 0.38);
+    }
+
+    .song-cover {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 6px;
+      background: #07140d;
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.32);
+    }
+
+    .song-cover-image,
+    .song-cover-placeholder {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .song-cover-image {
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .song-cover-placeholder {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 34%),
+        radial-gradient(circle at 72% 26%, rgba(255, 255, 255, 0.28), transparent 4.8rem),
+        var(--cover-bg, linear-gradient(135deg, #07140d 0%, #1db954 48%, #090a0e 100%));
+    }
+
+    .song-cover-placeholder::after {
+      content: "♪";
+      position: absolute;
+      right: 0.78rem;
+      bottom: 0.5rem;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 3.1rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .song-info {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding-top: 0.9rem;
+    }
+
+    .song-info h3 {
+      font-size: 1rem;
+      line-height: 1.2;
+      font-weight: 950;
+    }
+
+    .song-artist {
+      margin-top: 0.45rem;
+      color: rgba(248, 248, 248, 0.66);
+      font-size: 0.86rem;
+      line-height: 1.45;
+      font-weight: 800;
+    }
+
+    .song-grid {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .song-card .btn {
+      width: 100%;
+      margin-top: 0.9rem;
+      min-height: 2.55rem;
+      padding: 0.66rem 0.8rem;
+      font-size: 0.88rem;
+    }
+
+    .song-reveal-button {
+      color: rgba(248, 248, 248, 0.88);
+      background: rgba(255, 255, 255, 0.075);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: none;
+    }
+
+    .song-reveal-button:hover {
+      border-color: rgba(29, 185, 84, 0.38);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .song-details {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      padding: 0.78rem;
+      border: 1px solid rgba(29, 185, 84, 0.22);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .song-details[hidden] {
+      display: none;
+    }
+
+    .song-details p {
+      margin: 0;
+      color: rgba(248, 248, 248, 0.78);
+      font-size: 0.88rem;
+      line-height: 1.45;
+      font-weight: 750;
+    }
+
+    .song-spotify-button {
+      margin-top: 0;
+      color: #06130c;
+      background: var(--green);
+      box-shadow: 0 14px 32px rgba(29, 185, 84, 0.22);
+    }
+
+    .song-details .btn {
+      margin-top: 0;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+    }
+
+    .modal-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      width: min(720px, 100%);
+      max-height: min(84vh, 760px);
+      overflow: auto;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background:
+        radial-gradient(circle at 100% 0%, rgba(229, 9, 20, 0.16), transparent 14rem),
+        radial-gradient(circle at 0% 100%, rgba(29, 185, 84, 0.13), transparent 13rem),
+        linear-gradient(180deg, #1a1b22, #0e0f14);
+      box-shadow: var(--shadow);
+      transform: translateY(16px) scale(0.98);
+      transition: transform 180ms ease;
+    }
+
+    .modal-overlay.is-open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-top {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.8rem;
+      background: linear-gradient(180deg, rgba(20, 21, 27, 0.96), rgba(20, 21, 27, 0));
+    }
+
+    .close-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.35rem;
+      height: 2.35rem;
+      border-radius: 999px;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 1.45rem;
+      line-height: 1;
+      transition: background 180ms ease, transform 180ms ease;
+    }
+
+    .close-button:hover {
+      transform: rotate(6deg);
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .modal-body {
+      padding: 0 1.35rem 1.55rem;
+    }
+
+    .modal-kicker {
+      display: inline-flex;
+      margin-bottom: 0.75rem;
+      padding: 0.34rem 0.55rem;
+      border-radius: 999px;
+      color: var(--soft);
+      background: rgba(229, 9, 20, 0.12);
+      border: 1px solid rgba(229, 9, 20, 0.22);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .modal-title {
+      font-size: clamp(1.65rem, 5vw, 2.45rem);
+      line-height: 1.05;
+      font-weight: 950;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .modal-text {
+      margin-top: 1rem;
+      color: rgba(248, 248, 248, 0.86);
+      font-size: 1.02rem;
+      line-height: 1.75;
+      white-space: pre-line;
+    }
+
+    .modal-image {
+      width: 100%;
+      max-height: 360px;
+      margin-top: 1rem;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+    }
+
+    .modal-extra {
+      display: grid;
+      gap: 0.72rem;
+      margin-top: 1.1rem;
+    }
+
+    .modal-note {
+      margin-top: 1.35rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1040px) {
+      .row {
+        grid-template-columns: repeat(3, minmax(210px, 66vw));
+      }
+
+      .song-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .melfy-experience {
+        width: 100%;
+        overflow-x: hidden;
+      }
+
+      .melfy-experience .hero {
+        min-height: 58vh;
+        padding: 4.25rem max(1rem, env(safe-area-inset-right)) 2.2rem max(1rem, env(safe-area-inset-left));
+      }
+
+      @supports (height: 100svh) {
+        .melfy-experience .hero {
+          min-height: 58svh;
+        }
+      }
+
+      .melfy-experience .hero::after {
+        right: -1.35rem;
+        bottom: 1.4rem;
+        font-size: clamp(6rem, 30vw, 9rem);
+      }
+
+      .melfy-experience .hero h1 {
+        max-width: 8ch;
+        font-size: clamp(2.7rem, 15vw, 4.6rem);
+      }
+
+      .melfy-experience .subtitle {
+        max-width: 18rem;
+        font-size: 1.02rem;
+        line-height: 1.45;
+      }
+
+      .melfy-section {
+        padding: 2rem max(1rem, env(safe-area-inset-right)) 2rem max(1rem, env(safe-area-inset-left));
+      }
+
+      .melfy-section .section-header {
+        margin-bottom: 1rem;
+      }
+
+      .melfy-section .section-header h2 {
+        font-size: clamp(1.45rem, 7vw, 2rem);
+      }
+
+      .song-grid {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+        margin: 0 auto;
+      }
+
+      .song-card {
+        width: 100%;
+        max-width: 420px;
+        min-height: auto;
+        margin: 0 auto;
+        padding: 0.85rem;
+      }
+
+      .song-card:hover {
+        transform: none;
+      }
+
+      .song-card.is-open {
+        transform: translateY(-2px);
+      }
+
+      .song-info {
+        padding-top: 0.82rem;
+      }
+
+      .song-card .btn {
+        min-height: 46px;
+        padding: 0.75rem 0.9rem;
+      }
+
+      .song-details {
+        padding: 0.82rem;
+      }
+
+      .melfy-experience .final-actions {
+        padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+      }
+    }
+
+    @media (max-width: 680px) {
+      .profiles-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-card {
+        min-height: 260px;
+      }
+
+      .app-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .header-actions,
+      .switch-button {
+        width: 100%;
+      }
+
+      .hero {
+        min-height: 82vh;
+        padding-top: 4rem;
+      }
+
+      .hero::after {
+        right: -2rem;
+        bottom: 2.4rem;
+        font-size: 8.8rem;
+      }
+
+      .hero h1 {
+        max-width: 10ch;
+      }
+
+      .hero-actions,
+      .section-header,
+      .coupon-strip {
+        align-items: stretch;
+        grid-template-columns: 1fr;
+      }
+
+      .coupon-gifs {
+        grid-template-columns: 1fr;
+      }
+
+      .coupon-gif {
+        min-height: 220px;
+        aspect-ratio: 16 / 10;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .row {
+        grid-template-columns: repeat(3, minmax(205px, 78vw));
+      }
+
+      .episode-card {
+        min-height: 270px;
+      }
+
+      .card-content {
+        min-height: 238px;
+      }
+
+      .song-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .song-card {
+        min-height: auto;
+      }
+
+      .song-cover {
+        width: 100%;
+      }
+
+      .song-info {
+        padding-top: 0;
+      }
+
+      .melfy-section .song-info {
+        padding-top: 0.82rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+      }
+
+      .typed-line::after {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" id="ambient" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <section class="profiles-screen" id="profilesScreen" aria-labelledby="profilesTitle">
+      <div class="profiles-inner">
+        <h1 class="profiles-title" id="profilesTitle">Escolha por onde começar</h1>
+        <div class="profiles-grid" id="profilesGrid"></div>
+      </div>
+    </section>
+
+    <section class="experience melflix-experience" id="melflixExperience" hidden>
+      <header class="app-header">
+        <p class="brand" aria-label="MelFlix">
+          <span class="brand-mark" aria-hidden="true"></span>
+          MelFlix
+        </p>
+        <div class="header-actions">
+          <button class="switch-button" type="button" data-show-profiles>trocar perfil</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero" data-watermark="MEL" aria-labelledby="melflixTitle">
+          <div class="hero-content">
+            <p class="eyebrow">temporada especial · aniversário</p>
+            <h1 id="melflixTitle">Feliz aniversário, Mel.</h1>
+            <p class="subtitle">um catálogo de memórias feito só pra você.</p>
+            <p class="typed-line" id="melflixTyped" aria-live="polite"></p>
+
+            <div class="hero-actions">
+              <button class="btn btn-primary" type="button" data-open-episode="0">
+                <span class="play-symbol" aria-hidden="true"></span>
+                Começar episódios
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="friendshipTitle">
+          <div class="section-header">
+            <h2 id="friendshipTitle">Continuar assistindo: nossa amizade</h2>
+            <p class="section-note">episódios curtinhos para lembrar algumas coisas que mereciam ficar salvas em algum lugar bonito.</p>
+          </div>
+          <div class="row" id="episodeRow" aria-label="Episódios MelFlix"></div>
+        </section>
+
+        <section class="section" aria-labelledby="couponTitle">
+          <div class="coupon-strip">
+            <div class="coupon-copy">
+              <h3 id="couponTitle">Madero com a Mel EBAAAAAAAA</h3>
+              <span class="coupon-eyebrow">CUPOM DESBLOQUEADO</span>
+              <strong class="coupon-code">Código: MEL-MADERO</strong>
+              <p class="coupon-text">um vale-madero pra gente sair qualquer sábado que você estiver tranquila, belê? Pra eu comemorar você com calma 🤍</p>
+            </div>
+            <div class="coupon-gifs" aria-label="GIFs do cupom Madero">
+              <img class="coupon-gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDMyNGNtZWZ4dHB4dnYwNGNzaGplcWYyMDVsYTljdHU3Mmp5NHNwdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tsVy43fVemIsfe4o6t/giphy.gif" alt="GIF animado do convite Madero" loading="lazy" />
+              <img class="coupon-gif" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExY290NjhlNWNpbWszdHJpbzRxa3hhbWh1ZjJtcnZuamd0NjB5OHEycSZlcD12MV9pbnRlcm5hbF9naWQmY3Q9Zw/ALKkNtqbs3zW5QtR9d/giphy.gif" alt="GIF animado de comemoração do cupom" loading="lazy" />
+            </div>
+          </div>
+        </section>
+
+        <div class="final-actions">
+          <button class="back-button" type="button" data-show-profiles>voltar ao início</button>
+        </div>
+      </main>
+    </section>
+
+    <section class="experience melfy-experience" id="melfyExperience" hidden>
+      <header class="app-header">
+        <p class="brand" aria-label="MelFy">
+          <span class="brand-mark" aria-hidden="true"></span>
+          MelFy
+        </p>
+        <div class="header-actions">
+          <button class="switch-button" type="button" data-show-profiles>trocar perfil</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero" data-watermark="PLAY" aria-labelledby="melfyTitle">
+          <div class="hero-content">
+            <p class="eyebrow">sessão especial · mixtape</p>
+            <h1 id="melfyTitle">MelFy</h1>
+            <p class="subtitle">músicas que me lembram você.</p>
+          </div>
+        </section>
+
+        <section class="section melfy-section" id="melfySongs" aria-labelledby="songsTitle">
+          <div class="section-header">
+            <h2 id="songsTitle">Músicas que me lembram você</h2>
+          </div>
+          <div class="song-grid" id="melFySongsGrid"></div>
+        </section>
+
+        <div class="final-actions">
+          <button class="back-button" type="button" data-show-profiles>voltar ao início</button>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <article class="modal">
+      <div class="modal-top">
+        <button class="close-button" id="closeModal" type="button" aria-label="Fechar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-kicker" id="modalKicker">MelFlix original</p>
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <p class="modal-text" id="modalText"></p>
+        <div class="modal-extra" id="modalExtra"></div>
+        <p class="modal-note" id="modalNote"></p>
+      </div>
+    </article>
+  </div>
+
+  <script>
+    // PERFIS
+    const profiles = [
+      {
+        id: "melflix",
+        name: "MelFlix",
+        color: "#f01622",
+        avatar: "linear-gradient(145deg, #2a0509 0%, #e50914 54%, #6b050c 100%)",
+        glow: "radial-gradient(circle at 50% 10%, rgba(240, 22, 34, 0.28), transparent 18rem)",
+        shadow: "rgba(240, 22, 34, 0.34)",
+        markStart: "#ffe4e2",
+        markEnd: "#ff5f66",
+        labelColor: "rgba(255, 190, 190, 0.66)"
+      },
+      {
+        id: "melfy",
+        name: "MelFy",
+        color: "#35d974",
+        avatar: "linear-gradient(145deg, #052113 0%, #15924a 56%, #063519 100%)",
+        glow: "radial-gradient(circle at 50% 10%, rgba(53, 217, 116, 0.24), transparent 18rem)",
+        shadow: "rgba(53, 217, 116, 0.3)",
+        markStart: "#dffff0",
+        markEnd: "#35e06f",
+        labelColor: "rgba(135, 255, 181, 0.58)"
+      }
+    ];
+
+    // MELFLIX - EPISÓDIOS
+    const episodes = [
+      {
+        title: "Como você entrou na minha vida",
+        label: "episódio 01",
+        image: "assets/card1.jpeg",
+        imageReady: true,
+        imagePosition: "center 18%",
+        gradient: "linear-gradient(135deg, #4a1016 0%, #1a1419 52%, #2e1b34 100%)",
+        watched: false,
+        text: `Eu sempre gostei de ficar sozinho. É verdade.
+
+Mas esta é a primeira vez que sinto falta da companhia mesmo estando bem sozinho.
+
+A solidão sempre foi um lugar conhecido, quase confortável. Me acostumei a guardar muita coisa dentro de mim, a não abrir espaço de verdade para as pessoas entrarem. Ficar na minha era mais fácil. Não havia o que perder. Com você foi diferente e isso me assustou um pouco no começo.
+
+Nossa amizade tem uma leveza rara. Não exige esforço, não parece obrigação, não é algo que eu precise sustentar o tempo todo para continuar existindo. É só natural. E justamente por ser tão fácil, às vezes eu esqueço como é difícil encontrar isso. Aí você vai embora, ou eu volto pra casa, e sobra um silêncio que antes não incomodava. Agora incomoda um pouco.
+
+Talvez seja por isso que eu te carrego com tanto carinho. São poucas as pessoas que eu levo comigo de verdade. Poucas atravessam essa parte mais fechada minha sem pesar, sem forçar, sem me deixar cansado de ser quem eu sou. Você foi uma delas. E eu não sei dizer se isso é sorte ou se é uma espécie de despedida antecipada que a gente faz toda vez que reconhece algo que não vai durar para sempre.
+
+Você chegou de um jeito leve, mas ficou de um jeito importante. E eu acho que algumas amizades são exatamente isso, não chegam fazendo barulho, mas mudam alguma coisa dentro da gente sem pedir licença. E a gente nunca mais é exatamente o mesmo quando fica sozinho de novo.`
+      },
+      {
+        title: "Coisas que eu nunca te disse direito",
+        label: "episódio 02",
+        image: "assets/card2.jpeg",
+        imageReady: true,
+        imagePosition: "center 34%",
+        gradient: "linear-gradient(135deg, #30213a 0%, #181820 52%, #5a1119 100%)",
+        watched: false,
+        text: `Tem coisas que eu demorei muito tempo para conseguir dizer.
+
+Não porque não sentia. Sentia demais, talvez. Mas falar em voz alta sempre foi difícil para mim. Eu posso ser vulnerável em algumas partes, ainda existem sentimentos que eu guardo como se dizer fosse tornar tudo mais real do que eu saberia lidar. E coisas reais assustam. Coisas reais podem ir embora.
+
+Talvez eu nunca tenha te explicado isso direito.
+
+Eu tenho um carinho enorme por você. Um carinho que passa pela amizade, pela admiração, pela vontade de te ver bem. E também por uma vontade sincera de não perder você de novo. Isso mora dentro do carinho que eu tenho por você.
+
+Eu sei que eu me sabotei. Sei que algumas coisas poderiam ter sido diferentes se eu tivesse tido mais coragem, mais clareza, mais maturidade desde o começo. Eu carrego isso. Não como culpa que me esmaga, mas como uma espécie de peso que eu aprendi a não ignorar.
+
+Mas também reconheço meus limites.
+
+Reconheço que minha vida tá muito corrida, eu estudo muito, trabalho demais e tento construir muita coisa ao mesmo tempo. Nem sempre eu consigo oferecer presença do jeito que alguém como você merece, e eu sinto muito por isso. Não é falta de vontade, nem falta de sentimento. É sobre tempo, energia, cabeça. É sobre eu ainda estar aprendendo a não me fechar quando algo importa demais. Quando algo importa demais, eu às vezes tranco a porta por dentro sem perceber.
+
+Por isso, mais do que qualquer coisa, eu quero preservar o que existe de mais bonito entre a gente.
+
+Você é minha amiga. Uma amiga que eu amo. E mesmo que exista paixão envolvida, eu não quero confundir o que é bonito entre nós, nem transformar isso em algo pesado para você. Eu não quero que você sinta que precisa carregar o que eu sinto. Só quero que saiba que existe, tá?
+
+Eu só queria que você soubesse que você importa muito pra mim. E que eu não quero que você saia da minha vida. Não de novo.`
+      },
+      {
+        title: "Momentos que eu guardo",
+        label: "episódio 03",
+        image: "assets/card3.jpeg",
+        imageReady: true,
+        imagePosition: "center 24%",
+        gradient: "linear-gradient(135deg, #171923 0%, #4a1016 54%, #2d1f28 100%)",
+        watched: false,
+        text: `Eu guardo comigo aquele dia em que te expliquei por que eu tinha sumido.
+
+Você tinha todos os motivos para ficar magoada. Para não entender. Para se afastar de vez e deixar eu carregar sozinho o que eu mesmo construí. Mas, em vez disso, você foi compreensiva. Me ouviu. Me acolheu de um jeito que eu não esperava, talvez porque eu não esperasse ser recebido com tanta calma.
+
+Acho que foi ali que alguma coisa mudou dentro de mim. Não foi carência. Não foi vazio. Não foi porque eu precisasse preencher alguma ausência com alguém. Foi porque, naquele momento, eu consegui enxergar quem você era de verdade. Alguém leve, paciente, humana e rara. E enxergar isso me fez querer ser um pouco mais verdadeiro com meus sentimentos também. Isso ficou. Ficou dentro de mim como uma espécie de norte que eu não sabia que precisava.
+
+Também guardo o dia em que, depois de tanto tempo, eu finalmente falei algo que tinha medo até de admitir para mim mesmo. Foi difícil. Muito difícil. Eu achei que talvez você nem respondesse, que fosse tarde demais, que eu tivesse estragado tudo com essa minha autossabotagem e com esse jeito que eu tenho de demorar para ser claro. De demorar para ser.
+
+Mas você veio me ver, naquele mesmo dia. Talvez você nem tenha noção do quanto isso significou. Eu nunca vou esquecer isso.
+
+Você foi uma das poucas pessoas que conseguiu entender meu jeito de ser e de viver sem tentar me transformar em outra pessoa. Sem me fazer sentir errado por ser mais fechado. E é por isso que eu te guardo com tanto cuidado.
+
+Porque conexão leve assim é rara.`
+      }
+    ];
+
+    // MELFY - MÚSICAS
+    const melFySongs = [
+      {
+        title: "Só me Ligar",
+        artist: "BK",
+        spotifyUrl: "https://open.spotify.com/track/31ySVMbs7U8LOuy7w4McR9?si=6EPqXzLUTVmZpodFAbI8cA&rowId=3f07897ed2595c85",
+        cover: "343E7364-33C2-4B91-A1F1-736E4DC0714C.png",
+        excerpt: "1:10 - 1:48"
+      },
+      {
+        title: "Me Chamando de Paixão",
+        artist: "Jorge Ben Jor",
+        spotifyUrl: "https://open.spotify.com/track/5ayMrwnzBZ9QanL2M9A5Ey?si=UckQ953DRT2mOgb7M8P3ew",
+        cover: "E9D987B0-6186-4C36-90C5-5D36EF8F8931.png",
+        excerpt: "2:09 - 2:50"
+      },
+      {
+        title: "Fashion Bae",
+        artist: "Yunk Vino",
+        spotifyUrl: "https://open.spotify.com/track/1sCEFE2ZAGhbplDE8PhpH6?si=PEPWTGQFT5GGHcJ8h5Ugzg",
+        cover: "04B224B8-3A72-49EF-9F7E-22D987152BAF.png",
+        excerpt: "1:22 - 1:40"
+      }
+    ];
+
+    const typedPhrases = {
+      melflix: [
+        "Uma homenagem simples, mas feita com carinho.",
+        "Aperte o play quando quiser."
+      ]
+    };
+
+    const profilesScreen = document.querySelector("#profilesScreen");
+    const profilesGrid = document.querySelector("#profilesGrid");
+    const melflixExperience = document.querySelector("#melflixExperience");
+    const melfyExperience = document.querySelector("#melfyExperience");
+    const episodeRow = document.querySelector("#episodeRow");
+    const melFySongsGrid = document.querySelector("#melFySongsGrid");
+    const modalOverlay = document.querySelector("#modalOverlay");
+    const modalKicker = document.querySelector("#modalKicker");
+    const modalTitle = document.querySelector("#modalTitle");
+    const modalText = document.querySelector("#modalText");
+    const modalExtra = document.querySelector("#modalExtra");
+    const modalNote = document.querySelector("#modalNote");
+    const closeModalButton = document.querySelector("#closeModal");
+
+    let lastFocusedElement = null;
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function coverStyle(item, index) {
+      const fallbackCovers = [
+        "linear-gradient(135deg, #07140d 0%, #1db954 52%, #111217 100%)",
+        "linear-gradient(135deg, #0d2417 0%, #4de083 45%, #17181f 100%)",
+        "linear-gradient(135deg, #020403 0%, #16883f 48%, #111217 100%)"
+      ];
+
+      return `--cover-bg: ${fallbackCovers[index % fallbackCovers.length]};`;
+    }
+
+    function imageUrl(path) {
+      return path.replace(/\\/g, "/").replace(/'/g, "%27");
+    }
+
+    function songCoverHtml(song, index) {
+      if (song.cover && song.cover.trim()) {
+        return `
+          <span class="song-cover">
+            <img class="song-cover-image" src="${escapeHtml(imageUrl(song.cover))}" alt="Capa de ${escapeHtml(song.title)}" loading="lazy" decoding="async">
+          </span>
+        `;
+      }
+
+      return `
+        <span class="song-cover" style="${coverStyle(song, index)}">
+          <span class="song-cover-placeholder" aria-hidden="true"></span>
+        </span>
+      `;
+    }
+
+    function episodeHasImage(episode) {
+      return Boolean(episode.imageReady && episode.image && episode.image.trim());
+    }
+
+    function episodeCoverPath(episode) {
+      return episode.coverImage || episode.image;
+    }
+
+    function episodeHasCover(episode) {
+      const coverPath = episodeCoverPath(episode);
+      return Boolean(episode.imageReady && coverPath && coverPath.trim());
+    }
+
+    function episodeCardStyle(episode) {
+      return `--card-gradient: ${episode.gradient}; --card-position: ${episode.coverPosition || episode.imagePosition || "center"}; --card-scale: ${episode.coverScale || episode.imageScale || "1"};`;
+    }
+
+    function episodeCoverHtml(episode) {
+      const coverPath = episodeCoverPath(episode);
+
+      if (!episodeHasCover(episode)) {
+        return "";
+      }
+
+      return `<img class="episode-cover" src="${imageUrl(coverPath)}" alt="" aria-hidden="true" loading="lazy" decoding="async">`;
+    }
+
+    function episodeImageHtml(episode) {
+      if (!episodeHasImage(episode)) {
+        return "";
+      }
+
+      return `<img class="modal-image" src="${imageUrl(episode.image)}" alt="Imagem de ${escapeHtml(episode.title)}" style="object-position: ${episode.imagePosition || "center"}">`;
+    }
+
+    function watchStateHtml(isWatched) {
+      const label = isWatched ? "assistido" : "não assistido";
+      const stateClass = isWatched ? "is-watched" : "is-unwatched";
+
+      return `
+        <span class="watch-state ${stateClass}" aria-label="Estado: ${label}">
+          <span class="watch-dot" aria-hidden="true"></span>
+          <span class="watch-label">${label}</span>
+        </span>
+      `;
+    }
+
+    function profileLogoHtml(profile) {
+      const gradientId = `${profile.id}LogoGradient`;
+      const label = profile.name.toUpperCase();
+      const noteDots = profile.id === "melfy"
+        ? `
+          <circle cx="31" cy="84" r="11.5" fill="url(#${gradientId})"></circle>
+          <circle cx="89" cy="84" r="11.5" fill="url(#${gradientId})"></circle>
+        `
+        : "";
+
+      return `
+        <svg class="profile-logo-svg" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="${gradientId}" x1="20" y1="20" x2="100" y2="96" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="${profile.markStart}"></stop>
+              <stop offset="1" stop-color="${profile.markEnd}"></stop>
+            </linearGradient>
+          </defs>
+          <circle cx="35" cy="28" r="8.5" fill="url(#${gradientId})"></circle>
+          <circle cx="85" cy="28" r="8.5" fill="url(#${gradientId})"></circle>
+          <path
+            d="M30 85V51c0-7.5 8.5-11.4 14-6l16 15.6L76 45c5.5-5.4 14-1.5 14 6v34"
+            fill="none"
+            stroke="url(#${gradientId})"
+            stroke-width="15"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+          ${noteDots}
+          <text x="60" y="108" text-anchor="middle" fill="${profile.labelColor}" font-size="7.2" font-weight="900" letter-spacing="8">${label}</text>
+        </svg>
+      `;
+    }
+
+    function markEpisodeWatched(index) {
+      const episode = episodes[index];
+
+      if (!episode) {
+        return;
+      }
+
+      episode.watched = true;
+
+      const card = episodeRow.querySelector(`[data-episode-index="${index}"]`);
+      const state = card?.querySelector(".watch-state");
+      const label = state?.querySelector(".watch-label");
+
+      card?.classList.add("is-watched");
+      card?.setAttribute("aria-label", `Abrir ${episode.title} (assistido)`);
+      state?.classList.remove("is-unwatched");
+      state?.classList.add("is-watched");
+      state?.setAttribute("aria-label", "Estado: assistido");
+
+      if (label) {
+        label.textContent = "assistido";
+      }
+    }
+
+    function openEpisode(index) {
+      const episode = episodes[index];
+
+      if (!episode) {
+        return;
+      }
+
+      markEpisodeWatched(index);
+      openModal({
+        kicker: episode.label,
+        title: episode.title,
+        text: episode.text,
+        html: episodeImageHtml(episode)
+      });
+    }
+
+    function renderProfiles() {
+      profilesGrid.innerHTML = profiles.map((profile) => `
+        <button
+          class="profile-card"
+          type="button"
+          data-profile="${profile.id}"
+          style="--profile-color: ${profile.color}; --profile-avatar: ${profile.avatar}; --profile-glow: ${profile.glow}; --profile-shadow: ${profile.shadow};"
+          aria-label="Entrar no perfil ${profile.name}"
+        >
+          <span class="profile-avatar" aria-hidden="true">
+            ${profileLogoHtml(profile)}
+          </span>
+          <span class="profile-copy">
+            <h2>${profile.name}</h2>
+            ${profile.subtitle ? `<p>${profile.subtitle}</p>` : ""}
+          </span>
+        </button>
+      `).join("");
+    }
+
+    function showProfile(profileId) {
+      profilesScreen.hidden = true;
+      melflixExperience.hidden = profileId !== "melflix";
+      melfyExperience.hidden = profileId !== "melfy";
+      document.body.dataset.activeProfile = profileId;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showProfiles() {
+      profilesScreen.hidden = false;
+      melflixExperience.hidden = true;
+      melfyExperience.hidden = true;
+      document.body.dataset.activeProfile = "profiles";
+      closeModal();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderEpisodes() {
+      episodeRow.innerHTML = episodes.map((episode, index) => `
+          <button
+            class="episode-card${episode.watched ? " is-watched" : ""}"
+            type="button"
+            style="${episodeCardStyle(episode)}"
+            data-episode-index="${index}"
+            data-number="${String(index + 1).padStart(2, "0")}"
+            aria-label="Abrir ${episode.title}${episode.watched ? " (assistido)" : ""}"
+          >
+            ${episodeCoverHtml(episode)}
+            <span class="card-content">
+              <span>
+                <h3>${episode.title}</h3>
+                ${watchStateHtml(episode.watched)}
+              </span>
+            </span>
+          </button>
+      `).join("");
+    }
+
+    function renderSongs() {
+      melFySongsGrid.innerHTML = melFySongs.map((song, index) => `
+        <article class="song-card" data-song-card="${index}">
+          ${songCoverHtml(song, index)}
+          <div class="song-info">
+            <h3>${escapeHtml(song.title)}</h3>
+            <p class="song-artist">${escapeHtml(song.artist)}</p>
+            <button class="btn btn-secondary song-reveal-button" type="button" data-song-reveal="${index}" aria-expanded="false" aria-controls="song-details-${index}">Clique aqui</button>
+            <div class="song-details" id="song-details-${index}" hidden>
+              <p>Trecho que me lembra você: ${escapeHtml(song.excerpt)}</p>
+              <a class="btn btn-primary song-spotify-button" href="${escapeHtml(song.spotifyUrl)}" target="_blank" rel="noopener noreferrer">Abrir no Spotify</a>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function revealSong(index) {
+      const card = melFySongsGrid.querySelector(`[data-song-card="${index}"]`);
+      const details = card?.querySelector(".song-details");
+      const revealButton = card?.querySelector(".song-reveal-button");
+
+      if (!card || !details || !revealButton) {
+        return;
+      }
+
+      details.hidden = false;
+      card.classList.add("is-open");
+      revealButton.setAttribute("aria-expanded", "true");
+    }
+
+    function openModal(content) {
+      lastFocusedElement = document.activeElement;
+      modalKicker.textContent = content.kicker || "MelFlix original";
+      modalTitle.textContent = content.title || "";
+      modalText.textContent = content.text || "";
+      modalExtra.innerHTML = content.html || "";
+      modalExtra.hidden = !content.html;
+      modalNote.textContent = content.note || "";
+      modalNote.hidden = !content.note;
+      modalOverlay.classList.add("is-open");
+      modalOverlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      closeModalButton.focus();
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove("is-open");
+      modalOverlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+
+      if (lastFocusedElement) {
+        lastFocusedElement.focus();
+      }
+    }
+
+    function typeHeroText(target, phrases) {
+      const element = document.querySelector(target);
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (!element) {
+        return;
+      }
+
+      if (prefersReducedMotion) {
+        element.textContent = phrases[0];
+        return;
+      }
+
+      let phraseIndex = 0;
+      let letterIndex = 0;
+      let deleting = false;
+
+      function tick() {
+        const phrase = phrases[phraseIndex];
+        element.textContent = phrase.slice(0, letterIndex);
+
+        if (!deleting && letterIndex < phrase.length) {
+          letterIndex += 1;
+          setTimeout(tick, 45);
+          return;
+        }
+
+        if (!deleting && letterIndex === phrase.length) {
+          deleting = true;
+          setTimeout(tick, 1650);
+          return;
+        }
+
+        if (deleting && letterIndex > 0) {
+          letterIndex -= 1;
+          setTimeout(tick, 24);
+          return;
+        }
+
+        deleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        setTimeout(tick, 380);
+      }
+
+      tick();
+    }
+
+    function createAmbientSparkles() {
+      const ambient = document.querySelector("#ambient");
+      const symbols = ["✦", "✧", "·", "♡"];
+
+      for (let index = 0; index < 34; index += 1) {
+        const sparkle = document.createElement("span");
+        const symbol = symbols[index % symbols.length];
+
+        sparkle.className = `sparkle${symbol === "♡" ? " heart" : ""}`;
+        sparkle.textContent = symbol;
+        sparkle.style.left = `${Math.random() * 100}%`;
+        sparkle.style.top = `${Math.random() * 100}%`;
+        sparkle.style.setProperty("--duration", `${8 + Math.random() * 10}s`);
+        sparkle.style.setProperty("--delay", `${Math.random() * -12}s`);
+        sparkle.style.setProperty("--opacity", `${0.18 + Math.random() * 0.28}`);
+        ambient.appendChild(sparkle);
+      }
+    }
+
+    document.addEventListener("click", (event) => {
+      const profileButton = event.target.closest("[data-profile]");
+      const showProfilesButton = event.target.closest("[data-show-profiles]");
+      const episodeButton = event.target.closest("[data-episode-index]");
+      const heroEpisodeButton = event.target.closest("[data-open-episode]");
+      const songRevealButton = event.target.closest("[data-song-reveal]");
+
+      if (profileButton) {
+        showProfile(profileButton.dataset.profile);
+      }
+
+      if (showProfilesButton) {
+        showProfiles();
+      }
+
+      if (episodeButton) {
+        const index = Number(episodeButton.dataset.episodeIndex);
+        openEpisode(index);
+      }
+
+      if (heroEpisodeButton) {
+        const index = Number(heroEpisodeButton.dataset.openEpisode);
+        openEpisode(index);
+      }
+
+      if (songRevealButton) {
+        const index = Number(songRevealButton.dataset.songReveal);
+        revealSong(index);
+      }
+
+      if (event.target === modalOverlay) {
+        closeModal();
+      }
+    });
+
+    closeModalButton.addEventListener("click", closeModal);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modalOverlay.classList.contains("is-open")) {
+        closeModal();
+      }
+    });
+
+    renderProfiles();
+    renderEpisodes();
+    renderSongs();
+    typeHeroText("#melflixTyped", typedPhrases.melflix);
+    createAmbientSparkles();
+  </script>
+</body>
+</html>
